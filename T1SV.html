@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSTEP Speaking - Part 2 Practice</title>
+    <style>
+        :root {
+            --bg-color: #F4F8FC;
+            --primary-blue: #1565C0;
+            --light-blue: #D1EAFF;
+            --card-bg: #FFFFFF;
+            --text-main: #17324D;
+            --text-sub: #64748B;
+            --success-green: #2E7D32;
+            --warning-orange: #ED6C02;
+            --danger-red: #D32F2F;
+            --border-color: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 1.25rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        main {
+            flex: 1;
+            max-width: 850px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Progress Bar Section */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background-color: #E2E8F0;
+            color: var(--text-sub);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+
+        .progress-step.completed {
+            background-color: var(--success-green);
+            color: white;
+        }
+
+        /* Welcome / Intro Screen */
+        .welcome-title {
+            font-size: 1.75rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-desc {
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .instructions-list {
+            text-align: left;
+            background-color: var(--bg-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .instructions-list li {
+            margin-left: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Practice Screen Elements */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title-tag {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-blue);
+            letter-spacing: 0.5px;
+        }
+
+        .section-main-title {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-top: 0.25rem;
+        }
+
+        /* Phase Banner */
+        .phase-banner {
+            background-color: #E3F2FD;
+            color: var(--primary-blue);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #BBDEFB;
+        }
+
+        .phase-banner.speaking-phase {
+            background-color: #E8F5E9;
+            color: var(--success-green);
+            border-color: #C8E6C9;
+        }
+
+        /* Timer Display */
+        .timer-box {
+            background-color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--primary-blue);
+            border: 1px solid var(--border-color);
+        }
+
+        .timer-box.warning {
+            color: var(--warning-orange);
+            background-color: #FFF3E0;
+            border-color: #FFE0B2;
+        }
+
+        .timer-box.danger {
+            color: var(--danger-red);
+            background-color: #FFEBEE;
+            border-color: #FFCDD2;
+            animation: pulse-danger 1s infinite;
+        }
+
+        @keyframes pulse-danger {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .situation-box {
+            background-color: var(--light-blue);
+            border-left: 4px solid var(--primary-blue);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Options Cards */
+        .options-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .options-container h3 {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .option-card {
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-blue);
+            background-color: #FAFCFF;
+        }
+
+        .option-card.selected {
+            background-color: var(--light-blue);
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .option-letter {
+            font-weight: 700;
+            background-color: #E2E8F0;
+            color: var(--text-main);
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .option-card.selected .option-letter {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        /* Task Box */
+        .task-box {
+            background-color: #FAFCFF;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .task-box h3 {
+            font-size: 0.9rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .task-box ul {
+            margin-left: 1.25rem;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
+
+        .task-box li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Recording Studio */
+        .recorder-section {
+            background-color: #FAFCFF;
+            border: 1px dashed var(--primary-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .recorder-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            background-color: #CBD5E1;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-red);
+        }
+
+        .btn-secondary {
+            background-color: #475569;
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+        }
+
+        .recording-status {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .recording-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--danger-red);
+            border-radius: 50%;
+            display: inline-block;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+        /* Waveform Animation */
+        .waveform {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 24px;
+            margin: 0.75rem 0;
+        }
+
+        .waveform.active {
+            display: flex;
+        }
+
+        .wave-bar {
+            width: 4px;
+            height: 10px;
+            background-color: var(--primary-blue);
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { height: 8px; }
+            50% { height: 22px; }
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 1rem;
+            outline: none;
+        }
+
+        .action-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .modal-desc {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Summary Screen */
+        .summary-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            color: var(--success-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-stats {
+            background-color: var(--bg-color);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-stats strong {
+            display: block;
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+        }
+
+        .review-section-item {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .review-status-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .review-status-tag.recorded {
+            background-color: #E8F5E9;
+            color: var(--success-green);
+        }
+
+        .review-status-tag.skipped {
+            background-color: #FFFBEB;
+            color: #B45309;
+        }
+
+        /* Alerts & Banners */
+        .alert-banner {
+            background-color: #FFFBEB;
+            border: 1px solid #FDE68A;
+            color: #92400E;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-banner.show {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 640px) {
+            header {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1.25rem;
+            }
+            .progress-step {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.1rem;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .recorder-controls {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .action-footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .action-footer button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>VSTEP SPEAKING PRACTICE</h1>
+        <p>Part 2 – Solution Discussion Simulated Practice Platform</p>
+    </header>
+
+    <main>
+        <!-- Progress Bar (Hidden during intro, visible during practice & summary) -->
+        <div id="progress-container-wrapper" style="display: none;">
+            <div class="progress-container" id="progress-bar-nodes">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- INTRO SCREEN -->
+        <section id="intro-screen" class="card">
+            <h2 class="welcome-title">VSTEP Speaking – Part 2</h2>
+            <p style="font-weight: 600; color: var(--primary-blue); margin-bottom: 0.75rem;">Solution Discussion Practice</p>
+            <p class="welcome-desc">
+                You will be given a situation and three possible options. Each question includes 1 minute of preparation time followed by 3 minutes of speaking time. Choose the best option, explain your reasons, compare alternatives, and support your decision.
+            </p>
+            
+            <div class="instructions-list">
+                <strong>Test Structure & Rules:</strong>
+                <ul>
+                    <li><strong>4 Questions:</strong> Graded difficulty from basic choices to complex long-term solutions.</li>
+                    <li><strong>Preparation Time:</strong> 1 minute (01:00) to read and plan your response.</li>
+                    <li><strong>Speaking Time:</strong> 3 minutes (03:00) to record your response.</li>
+                    <li><strong>Interactive Options:</strong> Select your preferred option to help structure your response.</li>
+                    <li><strong>Navigation:</strong> Complete each question sequentially. Unfinished questions cannot be skipped ahead.</li>
+                </ul>
+            </div>
+
+            <div id="mic-permission-alert" class="alert-banner">
+                <strong>Microphone Note:</strong> If your browser restricts microphone access via file:// protocol, please ensure you run this file through a local web server (such as Live Server) or via HTTPS.
+            </div>
+
+            <div style="text-align: right;">
+                <button class="btn" id="start-practice-btn">
+                    Start Practice 
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- PRACTICE SCREEN -->
+        <section id="practice-screen" class="card" style="display: none;">
+            <div class="section-header">
+                <div>
+                    <div class="section-title-tag" id="q-tag">QUESTION 01 OF 04 &bull; B1</div>
+                    <h2 class="section-main-title" id="q-title">Choosing a Way to Improve English</h2>
+                </div>
+                <div class="timer-box" id="timer-display">01:00</div>
+            </div>
+
+            <div class="phase-banner" id="phase-banner">
+                <span id="phase-text">⏱️ Preparation Phase: Read the situation and plan your response.</span>
+                <button class="btn btn-secondary" id="btn-skip-prep" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;">Skip Prep & Start Speaking</button>
+            </div>
+
+            <div class="situation-box" id="q-situation">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="options-container">
+                <h3>Options</h3>
+                <div id="options-list-box">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <div class="task-box">
+                <h3>Your Task</h3>
+                <ul>
+                    <li>Choose the best option.</li>
+                    <li>Explain your reasons and compare with the alternatives.</li>
+                    <li>Support your decision with examples.</li>
+                </ul>
+            </div>
+
+            <div class="recorder-section" id="recorder-container" style="opacity: 0.6; pointer-events: none;">
+                <p style="font-size: 0.85rem; color: var(--warning-orange); font-weight: 600; margin-bottom: 0.75rem;" id="recorder-lock-msg">🔒 Microphone is locked during preparation time.</p>
+                <div class="recorder-controls">
+                    <button class="btn" id="btn-start-rec" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                        Start Recording
+                    </button>
+                    <button class="btn btn-danger" id="btn-stop-rec" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12"></rect></svg>
+                        Stop Recording
+                    </button>
+                    <button class="btn btn-secondary" id="btn-re-rec" style="display: none;">
+                        Record Again
+                    </button>
+                </div>
+
+                <div class="waveform" id="waveform-visual">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                </div>
+
+                <div class="recording-status" id="rec-status-text">
+                    Waiting for preparation time to finish...
+                </div>
+
+                <audio id="audio-playback" controls style="display: none;"></audio>
+            </div>
+
+            <div class="action-footer">
+                <button class="btn btn-secondary" id="btn-back-prep" style="display: none;">
+                    &larr; Back to Prep
+                </button>
+                <div style="margin-left: auto;">
+                    <button class="btn btn-success" id="btn-complete-q">
+                        Complete Question
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUMMARY SCREEN -->
+        <section id="summary-screen" class="card" style="display: none;">
+            <div class="summary-header">
+                <h2 class="summary-title">Practice Completed!</h2>
+                <p style="color: var(--text-sub);">You have successfully finished all 4 questions of VSTEP Speaking Part 2.</p>
+            </div>
+
+            <div class="summary-stats">
+                <div>
+                    Questions Completed
+                    <strong>4 / 4</strong>
+                </div>
+                <div>
+                    Total Time Elapsed
+                    <strong id="summary-total-time">00:00</strong>
+                </div>
+                <div>
+                    Recordings Saved
+                    <strong id="summary-recordings-count">0</strong>
+                </div>
+            </div>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-main);">Question Review & Recordings</h3>
+            <div id="summary-questions-list">
+                <!-- Injected via JS -->
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" id="btn-restart-practice">
+                    Restart Practice
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-card">
+            <h3 class="modal-title">Complete Question?</h3>
+            <p class="modal-desc">Are you sure you want to complete this question and continue to the next part?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="modal-btn-cancel">Cancel</button>
+                <button class="btn btn-success" id="modal-btn-continue">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESTART CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="restart-modal">
+        <div class="modal-card">
+            <h3 class="modal-title">Restart Practice?</h3>
+            <p class="modal-desc">All current recordings and progress will be reset. Do you wish to start over?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="restart-btn-cancel">Cancel</button>
+                <button class="btn btn-danger" id="restart-btn-confirm">Restart</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Independent Speaking Practice &bull; VSTEP Part 2 Solution Discussion
+    </footer>
+
+    <script>
+        // Data Structure for the 4 Questions (Part 2)
+        const vstepPart2Data = [
+            {
+                id: 1,
+                title: "Choosing a Way to Improve English",
+                difficulty: "B1",
+                situation: "Your friend wants to improve their English before an important examination. They are considering three options.",
+                options: [
+                    { letter: "A", text: "Joining an English speaking club." },
+                    { letter: "B", text: "Taking an online English course." },
+                    { letter: "C", text: "Studying with a private tutor." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Choosing a Place for a School Trip",
+                difficulty: "B1",
+                situation: "Your class is planning a one-day school trip. The class can choose only one of the following destinations.",
+                options: [
+                    { letter: "A", text: "A historical museum." },
+                    { letter: "B", text: "An amusement park." },
+                    { letter: "C", text: "A national park." }
+                ]
+            },
+            {
+                id: 3,
+                title: "Helping Students Reduce Stress",
+                difficulty: "B1–B2",
+                situation: "A school wants to help students reduce stress during examination periods. The school is considering three possible solutions.",
+                options: [
+                    { letter: "A", text: "Organizing regular sports activities." },
+                    { letter: "B", text: "Providing professional counselling services." },
+                    { letter: "C", text: "Reducing the amount of homework." }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reducing Traffic Problems in a City",
+                difficulty: "B1–B2",
+                situation: "A city is experiencing serious traffic congestion, especially during rush hours. The local government wants to introduce one major solution.",
+                options: [
+                    { letter: "A", text: "Improving public transportation." },
+                    { letter: "B", text: "Building more roads and parking facilities." },
+                    { letter: "C", text: "Encouraging people to work or study from home when possible." }
+                ]
+            }
+        ];
+
+        // Application State
+        let currentQuestionIndex = 0;
+        let questionStatuses = [false, false, false, false]; // completed or not
+        let selectedOptions = [null, null, null, null]; // user selected option index (0, 1, 2)
+        let questionRecordings = [null, null, null, null]; // blob objects
+        let questionRecordingUrls = [null, null, null, null];
+        let totalElapsedTime = 0; // seconds
+
+        // Timer Variables ('prep' or 'speaking')
+        let currentPhase = 'prep'; 
+        const PREP_DURATION = 60; // 1 minute prep
+        const SPEAKING_DURATION = 180; // 3 minutes speaking
+        let timeLeft = PREP_DURATION;
+        let timerInterval = null;
+        let timerStartTime = null;
+
+        // Recording Variables
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let streamRef = null;
+
+        // DOM Elements
+        const introScreen = document.getElementById('intro-screen');
+        const practiceScreen = document.getElementById('practice-screen');
+        const summaryScreen = document.getElementById('summary-screen');
+        const progressContainerWrapper = document.getElementById('progress-container-wrapper');
+        const progressBarNodes = document.getElementById('progress-bar-nodes');
+
+        const startPracticeBtn = document.getElementById('start-practice-btn');
+        const qTag = document.getElementById('q-tag');
+        const qTitle = document.getElementById('q-title');
+        const qSituation = document.getElementById('q-situation');
+        const optionsListBox = document.getElementById('options-list-box');
+        const timerDisplay = document.getElementById('timer-display');
+        const phaseBanner = document.getElementById('phase-banner');
+        const phaseText = document.getElementById('phase-text');
+        const btnSkipPrep = document.getElementById('btn-skip-prep');
+        const btnBackPrep = document.getElementById('btn-back-prep');
+
+        const recorderContainer = document.getElementById('recorder-container');
+        const recorderLockMsg = document.getElementById('recorder-lock-msg');
+        const btnStartRec = document.getElementById('btn-start-rec');
+        const btnStopRec = document.getElementById('btn-stop-rec');
+        const btnReRec = document.getElementById('btn-re-rec');
+        const waveformVisual = document.getElementById('waveform-visual');
+        const recStatusText = document.getElementById('rec-status-text');
+        const audioPlayback = document.getElementById('audio-playback');
+        const btnCompleteQ = document.getElementById('btn-complete-q');
+
+        const confirmModal = document.getElementById('confirm-modal');
+        const modalBtnCancel = document.getElementById('modal-btn-cancel');
+        const modalBtnContinue = document.getElementById('modal-btn-continue');
+
+        const restartModal = document.getElementById('restart-modal');
+        const restartBtnCancel = document.getElementById('restart-btn-cancel');
+        const restartBtnConfirm = document.getElementById('restart-btn-confirm');
+        const btnRestartPractice = document.getElementById('btn-restart-practice');
+
+        const summaryTotalTime = document.getElementById('summary-total-time');
+        const summaryRecordingsCount = document.getElementById('summary-recordings-count');
+        const summaryQuestionsList = document.getElementById('summary-questions-list');
+        const micPermissionAlert = document.getElementById('mic-permission-alert');
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.protocol === 'file:') {
+                micPermissionAlert.classList.add('show');
+            }
+
+            renderProgressBar();
+            setupEventListeners();
+        });
+
+        function renderProgressBar() {
+            progressBarNodes.innerHTML = '';
+            vstepPart2Data.forEach((q, idx) => {
+                const node = document.createElement('div');
+                node.className = 'progress-step';
+                if (idx === currentQuestionIndex && introScreen.style.display === 'none') {
+                    node.classList.add('active');
+                } else if (questionStatuses[idx]) {
+                    node.classList.add('completed');
+                }
+                node.textContent = `Q ${q.id}`;
+                progressBarNodes.appendChild(node);
+            });
+        }
+
+        function setupEventListeners() {
+            startPracticeBtn.addEventListener('click', startPractice);
+            btnSkipPrep.addEventListener('click', switchToSpeakingPhase);
+            btnBackPrep.addEventListener('click', switchToPrepPhase);
+
+            btnStartRec.addEventListener('click', startRecording);
+            btnStopRec.addEventListener('click', stopRecording);
+            btnReRec.addEventListener('click', resetCurrentRecording);
+            btnCompleteQ.addEventListener('click', openConfirmModal);
+
+            modalBtnCancel.addEventListener('click', () => confirmModal.classList.remove('active'));
+            modalBtnContinue.addEventListener('click', confirmCompleteQuestion);
+
+            btnRestartPractice.addEventListener('click', () => restartModal.classList.add('active'));
+            restartBtnCancel.addEventListener('click', () => restartModal.classList.remove('active'));
+            restartBtnConfirm.addEventListener('click', executeRestart);
+        }
+
+        function startPractice() {
+            introScreen.style.display = 'none';
+            practiceScreen.style.display = 'block';
+            progressContainerWrapper.style.display = 'block';
+            currentQuestionIndex = 0;
+            loadQuestion(currentQuestionIndex);
+        }
+
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const data = vstepPart2Data[index];
+
+            qTag.textContent = `QUESTION 0${data.id} OF 04 • ${data.difficulty}`;
+            qTitle.textContent = data.title;
+            qSituation.innerHTML = `<strong>Situation:</strong> ${data.situation}`;
+
+            optionsListBox.innerHTML = '';
+            data.options.forEach((opt, optIdx) => {
+                const optCard = document.createElement('div');
+                optCard.className = 'option-card';
+                if (selectedOptions[index] === optIdx) {
+                    optCard.classList.add('selected');
+                }
+
+                optCard.innerHTML = `
+                    <span class="option-letter">${opt.letter}</span>
+                    <span>${opt.text}</span>
+                `;
+
+                optCard.addEventListener('click', () => {
+                    selectedOptions[index] = optIdx;
+                    document.querySelectorAll('.option-card').forEach((card, cIdx) => {
+                        if (cIdx === optIdx) {
+                            card.classList.add('selected');
+                        } else {
+                            card.classList.remove('selected');
+                        }
+                    });
+                });
+
+                optionsListBox.appendChild(optCard);
+            });
+
+            // Reset recording UI for question
+            if (questionRecordings[index]) {
+                audioPlayback.src = questionRecordingUrls[index];
+                audioPlayback.style.display = 'block';
+                btnReRec.style.display = 'inline-flex';
+                recStatusText.textContent = 'Recording saved for this question.';
+            } else {
+                audioPlayback.src = '';
+                audioPlayback.style.display = 'none';
+                btnReRec.style.display = 'none';
+                recStatusText.textContent = 'Ready to record your response.';
+            }
+
+            renderProgressBar();
+            switchToPrepPhase();
+        }
+
+        function switchToPrepPhase() {
+            if (isRecording) {
+                stopRecording();
+            }
+            currentPhase = 'prep';
+            phaseBanner.className = 'phase-banner';
+            phaseText.textContent = '⏱️ Preparation Phase: Read the situation and plan your response.';
+            btnSkipPrep.style.display = 'inline-block';
+            btnBackPrep.style.display = 'none';
+
+            // Lock recording during prep
+            recorderContainer.style.opacity = '0.6';
+            recorderContainer.style.pointerEvents = 'none';
+            recorderLockMsg.style.display = 'block';
+            btnStartRec.disabled = true;
+            btnStopRec.disabled = true;
+
+            startTimer(PREP_DURATION);
+        }
+
+        function switchToSpeakingPhase() {
+            stopTimer();
+            currentPhase = 'speaking';
+            phaseBanner.className = 'phase-banner speaking-phase';
+            phaseText.textContent = '🎤 Speaking Phase: Record your response now.';
+            btnSkipPrep.style.display = 'none';
+            btnBackPrep.style.display = 'inline-block';
+
+            // Unlock recording during speaking phase
+            recorderContainer.style.opacity = '1';
+            recorderContainer.style.pointerEvents = 'auto';
+            recorderLockMsg.style.display = 'none';
+            
+            if (!questionRecordings[currentQuestionIndex]) {
+                btnStartRec.disabled = false;
+            }
+            btnStopRec.disabled = true;
+
+            startTimer(SPEAKING_DURATION);
+        }
+
+        // Robust Date.now() Timer
+        function startTimer(durationSeconds) {
+            stopTimer();
+            timeLeft = durationSeconds;
+            timerStartTime = Date.now();
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                const elapsedSeconds = Math.floor((Date.now() - timerStartTime) / 1000);
+                timeLeft = Math.max(0, durationSeconds - elapsedSeconds);
+                updateTimerDisplay();
+
+                if (currentPhase === 'speaking') {
+                    totalElapsedTime++;
+                }
+
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    handlePhaseTimeUp();
+                }
+            }, 250);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            timerDisplay.className = 'timer-box';
+            if (timeLeft <= 10) {
+                timerDisplay.classList.add('danger');
+            } else if (timeLeft <= 30) {
+                timerDisplay.classList.add('warning');
+            }
+        }
+
+        function handlePhaseTimeUp() {
+            timerDisplay.textContent = "00:00";
+            timerDisplay.className = 'timer-box danger';
+
+            if (currentPhase === 'prep') {
+                // Automatically switch to speaking phase when prep ends
+                switchToSpeakingPhase();
+            } else if (currentPhase === 'speaking') {
+                recStatusText.textContent = 'Time is up! Please complete the question.';
+                btnStartRec.disabled = true;
+                if (isRecording) {
+                    stopRecording();
+                }
+            }
+        }
+
+        // Recording Functionality
+        async function startRecording() {
+            audioChunks = [];
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error("MediaDevices API not supported in this browser.");
+                }
+
+                streamRef = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                let options = {};
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    options = { mimeType: 'audio/webm;codecs=opus' };
+                } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                    options = { mimeType: 'audio/mp4' };
+                }
+
+                mediaRecorder = new MediaRecorder(streamRef, options);
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data && event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    const mimeType = mediaRecorder.mimeType || 'audio/webm';
+                    const audioBlob = new Blob(audioChunks, { type: mimeType });
+                    
+                    if (questionRecordingUrls[currentQuestionIndex]) {
+                        URL.revokeObjectURL(questionRecordingUrls[currentQuestionIndex]);
+                    }
+
+                    questionRecordings[currentQuestionIndex] = audioBlob;
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    questionRecordingUrls[currentQuestionIndex] = audioUrl;
+
+                    audioPlayback.src = audioUrl;
+                    audioPlayback.style.display = 'block';
+                    btnReRec.style.display = 'inline-flex';
+                    recStatusText.textContent = 'Recording saved successfully.';
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                btnStartRec.disabled = true;
+                btnStopRec.disabled = false;
+                waveformVisual.classList.add('active');
+                recStatusText.innerHTML = '<span class="recording-dot"></span> Recording in progress...';
+
+            } catch (err) {
+                console.error("Microphone access error:", err);
+                recStatusText.textContent = 'Microphone access denied or unavailable. You can still complete the question.';
+                btnStartRec.disabled = false;
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+            }
+
+            if (streamRef) {
+                streamRef.getTracks().forEach(track => track.stop());
+                streamRef = null;
+            }
+
+            btnStartRec.disabled = false;
+            btnStopRec.disabled = true;
+            waveformVisual.classList.remove('active');
+        }
+
+        function resetCurrentRecording() {
+            if (questionRecordingUrls[currentQuestionIndex]) {
+                URL.revokeObjectURL(questionRecordingUrls[currentQuestionIndex]);
+            }
+            questionRecordings[currentQuestionIndex] = null;
+            questionRecordingUrls[currentQuestionIndex] = null;
+
+            audioPlayback.src = '';
+            audioPlayback.style.display = 'none';
+            btnReRec.style.display = 'none';
+            recStatusText.textContent = 'Ready to record your response.';
+        }
+
+        function openConfirmModal() {
+            confirmModal.classList.add('active');
+        }
+
+        function confirmCompleteQuestion() {
+            confirmModal.classList.remove('active');
+            stopTimer();
+            if (isRecording) {
+                stopRecording();
+            }
+
+            questionStatuses[currentQuestionIndex] = true;
+
+            if (currentQuestionIndex < vstepPart2Data.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            } else {
+                showSummaryScreen();
+            }
+        }
+
+        function showSummaryScreen() {
+            practiceScreen.style.display = 'none';
+            progressContainerWrapper.style.display = 'none';
+            summaryScreen.style.display = 'block';
+
+            const mins = Math.floor(totalElapsedTime / 60);
+            const secs = totalElapsedTime % 60;
+            summaryTotalTime.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            const recordedCount = questionRecordings.filter(b => b !== null).length;
+            summaryRecordingsCount.textContent = `${recordedCount} / 4`;
+
+            summaryQuestionsList.innerHTML = '';
+            vstepPart2Data.forEach((q, idx) => {
+                const item = document.createElement('div');
+                item.className = 'review-section-item';
+
+                const hasRecording = questionRecordings[idx] !== null;
+                const statusTagClass = hasRecording ? 'recorded' : 'skipped';
+                const statusText = hasRecording ? 'Recorded' : 'No Recording';
+                const chosenOpt = selectedOptions[idx] !== null ? `(Chosen Option: ${q.options[selectedOptions[idx]].letter})` : '(No option selected)';
+
+                item.innerHTML = `
+                    <div class="review-section-header">
+                        <span>Question ${q.id}: ${q.title} <small style="color: var(--text-sub); font-weight: normal;">${chosenOpt}</small></span>
+                        <span class="review-status-tag ${statusTagClass}">${statusText}</span>
+                    </div>
+                `;
+
+                if (hasRecording) {
+                    const audioTag = document.createElement('audio');
+                    audioTag.controls = true;
+                    audioTag.src = questionRecordingUrls[idx];
+                    audioTag.style.marginTop = '0.5rem';
+                    item.appendChild(audioTag);
+                } else {
+                    const p = document.createElement('p');
+                    p.style.fontSize = '0.85rem';
+                    p.style.color = 'var(--text-sub)';
+                    p.style.marginTop = '0.25rem';
+                    p.textContent = 'No audio recording was saved for this question.';
+                    item.appendChild(p);
+                }
+
+                summaryQuestionsList.appendChild(item);
+            });
+        }
+
+        function executeRestart() {
+            restartModal.classList.remove('active');
+            stopTimer();
+            if (isRecording) {
+                stopRecording();
+            }
+
+            questionRecordingUrls.forEach(url => {
+                if (url) URL.revokeObjectURL(url);
+            });
+
+            currentQuestionIndex = 0;
+            questionStatuses = [false, false, false, false];
+            selectedOptions = [null, null, null, null];
+            questionRecordings = [null, null, null, null];
+            questionRecordingUrls = [null, null, null, null];
+            totalElapsedTime = 0;
+
+            summaryScreen.style.display = 'none';
+            introScreen.style.display = 'block';
+            progressContainerWrapper.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
